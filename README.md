@@ -1,19 +1,13 @@
 # SSO / SAML 2.0 Implementation Toolkit
 
-The two tools an implementation engineer reaches for on every SSO
-deployment: a **SAML 2.0 IdP metadata validator** and a **go-live
+Two tools I use on just about every SSO deployment: a **SAML 2.0 IdP metadata validator** and a **go-live
 readiness report generator**.
 
 ## The problem it solves
 
-SSO integrations fail late and embarrassingly, usually for preventable
-reasons discovered in the go-live call: the IdP's signing certificate
-expired last month, the SSO endpoint is still the HTTP test URL, the
-metadata advertises no NameID format, the ACS URL registered at the IdP
-differs from the SP's by a trailing slash, or the two servers' clocks
-are six minutes apart and every assertion is "not yet valid". This
-toolkit catches the metadata defects automatically — before the call —
-and turns the rest into a structured GO / NO-GO readiness report.
+SSO integrations tend to fail late. And badly. Usually for reasons that could have been caught much earlier, but only show up on the go-live call. The IdP signing certificate expired last month. The SSO endpoint is still the HTTP test URL. The metadata lists no NameID format. The ACS URL registered at the IdP differs from the SP's by a trailing slash. Or the two servers' clocks are six minutes apart, so every assertion comes back "not yet valid".
+
+This toolkit catches the metadata problems automatically, before that call. It puts the rest into a structured GO / NO-GO readiness report.
 
 ## What the validator checks
 
@@ -22,16 +16,13 @@ and turns the rest into a structured GO / NO-GO readiness report.
 - SSO endpoints: at least one present, binding recorded, **HTTPS
   enforced** (a plain-HTTP endpoint is a blocking failure)
 - Signing certificate: presence in a signing `KeyDescriptor`, valid
-  base64, and **expiry read from the certificate itself** — validity
-  dates are extracted with a small standard-library ASN.1/DER parser
-  (Certificate → TBSCertificate → validity), not guessed from filenames
+  base64, and **expiry read from the certificate itself**. The validity
+  dates come from a small standard-library ASN.1/DER parser
+  (Certificate → TBSCertificate → validity). They are not guessed from filenames
 - `NameIDFormat` values advertised
 - Attributes advertised for release (email, givenName, surname, groups…)
 
-The readiness report combines the validation result with the standard
-deployment checklist — clock skew, exact ACS URL matching, entityID
-agreement, attribute mapping, signature requirements, test users, and a
-rollback plan — and issues a **GO / GO with warnings / NO-GO** verdict.
+The readiness report takes the validation result and adds the usual deployment checklist: clock skew, exact ACS URL matching, entityID agreement, attribute mapping, signature requirements, test users, and a rollback plan. Then it gives a verdict: **GO / GO with warnings / NO-GO**.
 
 ## How to run
 
@@ -48,8 +39,7 @@ Python 3, standard library only.
 
 ## Demo output (actual run)
 
-The valid sample passes everything — note the certificate dates, read
-from the embedded certificate by the DER parser:
+The valid sample passes everything. Look at the certificate dates. The DER parser read those from the embedded certificate:
 
 ```
 ========================================================================
@@ -75,9 +65,7 @@ Deployment checklist (confirm with both IdP and SP owners):
   [REVIEW] Rollback plan: Keep local break-glass admin access enabled until SSO is proven for at least one full business cycle.
 ```
 
-The defective sample carries three deliberate defects — an expired
-certificate placeholder, no NameID format, and a plain-HTTP endpoint —
-and is correctly stopped:
+The defective sample has three defects on purpose: an expired certificate placeholder, no NameID format, and a plain-HTTP endpoint. The tool stops it, as it should:
 
 ```
 ========================================================================
@@ -94,29 +82,15 @@ Metadata: sample_metadata/idp-defective.xml
 Verdict: NO-GO  (3 blocking, 1 warnings)
 ```
 
-(The full demo prints the metadata checks and the deployment checklist
-under each readiness report; the checklist is identical for both files
-and is shown once above.)
+(The full demo prints the metadata checks and the deployment checklist under each readiness report. The checklist is the same for both files, so it is only shown once above.)
 
 ## Design notes and limitations
 
-- **Certificate expiry is really parsed**, using a minimal DER reader
-  written for this project — no `cryptography`/`ssl` dependency. If a
-  certificate's dates cannot be parsed, the tool says so (WARN) rather
-  than guessing. The valid sample embeds a real self-signed certificate
-  for a fictional IdP; the defective sample's certificate is an
-  explicitly labelled expired placeholder, as is common in test
-  metadata exchanged during implementations.
-- **Validation is metadata-deep, not protocol-deep.** The tool does not
-  fetch endpoints, perform a test authentication, or verify XML
-  signatures on the metadata itself — those belong to integration
-  testing with the actual IdP/SP pair.
-- The checklist items are marked REVIEW, not PASS: they are facts about
-  two organisations' configurations that no file inspection can prove,
-  which is precisely why they belong on a go-live checklist.
-- Both sample IdPs are fictional (`*.example.com`-style domains) and
-  the sample data contains nothing from any real deployment.
+- **Certificate expiry is really parsed.** I wrote a minimal DER reader for this project, so there is no `cryptography`/`ssl` dependency. If the dates in a certificate cannot be parsed, the tool says so (WARN) instead of guessing. The valid sample embeds a real self-signed certificate for a fictional IdP. The defective sample's certificate is an expired placeholder, labelled as such. You see that a lot in test metadata during implementations.
+- **Validation is metadata-deep, not protocol-deep.** The tool does not fetch endpoints, try a test authentication, or verify XML signatures on the metadata itself. That work belongs in integration testing with the actual IdP/SP pair.
+- The checklist items are marked REVIEW, not PASS. They are facts about how two organisations have configured their sides, and no file inspection can prove them. That is exactly why they belong on a go-live checklist.
+- Both sample IdPs are fictional (`*.example.com`-style domains). The sample data contains nothing from any real deployment.
 
 ## License
 
-MIT — see `LICENSE`.
+MIT. See `LICENSE`.
