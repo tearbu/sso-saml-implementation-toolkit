@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fictional sample: Fabrikam IdP (deliberate defects: expired cert
+     placeholder, no NameIDFormat, plain-HTTP SSO endpoint) -->
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                     entityID="https://idp.fabrikam-example.com/saml">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>RVhQSVJFRC1DRVJULVBMQUNFSE9MREVSLU5PVC1BLVJFQUwtQ0VSVElGSUNBVEUtSVNTVUVELTIwMjMtRVhQSVJFRC0yMDI0</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://idp.fabrikam-example.com/saml/sso"/>
+  </md:IDPSSODescriptor>
+</md:EntityDescriptor>

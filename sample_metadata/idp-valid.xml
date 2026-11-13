@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fictional sample: Contoso IdP (valid) -->
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                     entityID="https://idp.contoso-example.com/saml2">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol" WantAuthnRequestsSigned="true">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDFTCCAf2gAwIBAgIUYkdgxSKS4Nslbk5o++D7qmjo0scwDQYJKoZIhvcNAQELBQAwGjEYMBYGA1UEAwwPaWRwLmV4YW1wbGUuY29tMB4XDTI2MTExMzExMTA1NloXDTI3MTExMzExMTA1NlowGjEYMBYGA1UEAwwPaWRwLmV4YW1wbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvS9LP7Fw72a2o+E61Ir61L0lpXaw/iK8yt19rrhLFaDm2pe7JCz1mmm4qJvU1YX2OKTfO2La1Oub1IQZM9KXMvOirBLZ0bdERjI+r0a8gGiSe+rAew3VsqX6YdIIkmK4ZEH0UyjLRkUuOkWPz+iEsAi5krCaaD2n0NUkqqsIiWVPq+5B8KfnZdC3KYyNBd/yEzuimQdLJTu6MSeb22iTfC7GNgfs5quIBUeaOe+2gmxnc8l0ZHws9KwfLmoi1KC6KLLM/clGCZ5JrkFq74TTJkqCMn65+fRyuFyu/QWA2wEi8EsMywxPL4HeBEhQHDPx+ySLolKAv7h6jS2wzxAZuwIDAQABo1MwUTAdBgNVHQ4EFgQU5jN6MI4Ybw0fymSbUfHIjd0cjXcwHwYDVR0jBBgwFoAU5jN6MI4Ybw0fymSbUfHIjd0cjXcwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAiFQlIJ3G8a+u5GcECiulTL+ggA+jDgMzfb3GOO2LtG+mI5P23hIK64b5/GZytrvLZ6XbQCl9Wqeisz8cj203U5w3ZfoWd8Q9VhNl7I+11oB+SWhJuXbzluVI6i51N1fbwKcgZxyzidKhe/A+XXTsvvuU4eV4FIwUrjJ6ysZVHtXJxdOI4pOakJFs8pAcRfmhYM0sd58ggKEQY390QjwT2Fp0zvRsuKah6jcFUCkPoDj19VZLoM3t9gyGMe4LcJXKl8kb048q3lowdByG3uGCgzmcoLM/YcLO9HRi7a3j92bkyGbrB79ub3pcAqvCW/Hp1HRCE1iZAhiiGQre/SAKpQ==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp.contoso-example.com/saml2/sso/redirect"/>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp.contoso-example.com/saml2/sso/post"/>
+    <saml:Attribute Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic"/>
+    <saml:Attribute Name="givenName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic"/>
+    <saml:Attribute Name="surname" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic"/>
+    <saml:Attribute Name="groups" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic"/>
+  </md:IDPSSODescriptor>
+</md:EntityDescriptor>
